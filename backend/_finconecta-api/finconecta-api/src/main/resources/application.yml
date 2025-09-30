@@ -1,0 +1,33 @@
+# backend/finconecta-api/src/main/resources/application.yml
+
+server:
+  port: ${SERVER_PORT:8080} # Puerto por defecto 8080
+
+# ------------------------------------
+# 1. SOLUCIÓN AL ERROR DE BASE DE DATOS (Falta de URL)
+# Deshabilita temporalmente la autocarga de JPA/DataSource
+# Esto resuelve el error "Failed to configure a DataSource"
+# ------------------------------------
+spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+
+# ------------------------------------
+# 2. SOLUCIÓN AL ERROR DE JWT_SECRET
+# Fijar el valor del secreto directamente en el archivo de configuración.
+# ------------------------------------
+app:
+  jwt:
+    # ELIMINA ${JWT_SECRET} y PON el valor directo.
+    secret: 791d8dbe27e033f48ac3c4344e12acc352174420432c5b0da57e90e402efb2ef
+    # Tiempo de expiración del token en milisegundos (24 horas)
+    expiration-ms: 86400000
+
+# ------------------------------------
+# 3. Configuración CORS (necesaria para el frontend React)
+# ------------------------------------
+cors:
+  allowed-origins: http://localhost:3000,http://127.0.0.1:3000
+  # Puedes expandir esto más tarde, pero esto cubre el entorno de desarrollo de React
