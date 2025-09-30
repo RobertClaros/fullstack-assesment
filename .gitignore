@@ -1,0 +1,11 @@
+# Directorios de compilación/dependencias de IDEs/Java
+.idea/
+*.iml
+target/
+
+# Directorios de frontend
+/frontend/node_modules
+/frontend/build
+
+# Credenciales y Ambiente Local (CRÍTICO)
+/backend/.env
