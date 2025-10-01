@@ -9,3 +9,4 @@ target/
 
 # Credenciales y Ambiente Local (CRÍTICO)
 /backend/.env
+/backend/_finconecta-api/finconecta-api/src/main/resources/application.yml
