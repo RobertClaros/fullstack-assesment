@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/customers")
@@ -32,14 +33,14 @@ public class CustomerController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Customer> getCustomerById(@PathVariable Long id) {
+    public ResponseEntity<Customer> getCustomerById(@PathVariable UUID id) {
         Optional<Customer> customer = customerService.findById(id);
         return customer.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Customer> updateCustomer(@PathVariable Long id, @RequestBody Customer customerDetails) {
+    public ResponseEntity<Customer> updateCustomer(@PathVariable UUID id, @RequestBody Customer customerDetails) {
         return customerService.findById(id)
                 .map(existingCustomer -> {
                     existingCustomer.setFirstName(customerDetails.getFirstName());
@@ -54,7 +55,7 @@ public class CustomerController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> deleteCustomer(@PathVariable Long id) {
+    public ResponseEntity<HttpStatus> deleteCustomer(@PathVariable UUID id) {
         try {
             customerService.deleteById(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

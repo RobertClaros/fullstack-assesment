@@ -28,14 +28,17 @@ public class JwtUtil {
         return Jwts.builder()
                 .subject(username)
                 .issuedAt(new Date())
-                .expiration(new Date((new Date()).getTime() + jwtExpirationMs))
+                .expiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
     public boolean validateJwtToken(String authToken) {
         try {
-            Jwts.parser().setSigningKey(key).build().parseClaimsJws(authToken);
+            Jwts.parser()
+                    .setSigningKey(key)
+                    .build() // El método build() fue añadido en versiones más nuevas
+                    .parseClaimsJws(authToken);
             return true;
         } catch (SignatureException e) {
             System.err.println("Invalid JWT signature: " + e.getMessage());
@@ -52,7 +55,9 @@ public class JwtUtil {
     }
 
     public String getUserNameFromJwtToken(String token) {
-        return Jwts.parser().setSigningKey(key).build()
+        return Jwts.parser()
+                .setSigningKey(key)
+                .build()
                 .parseClaimsJws(token)
                 .getBody().getSubject();
     }

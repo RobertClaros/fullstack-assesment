@@ -1,4 +1,4 @@
-package com.finconecta.robert.finconecta_api.repositories;
+package com.finconecta.robert.finconecta_api.repositories.jpa;
 
 import com.finconecta.robert.finconecta_api.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;

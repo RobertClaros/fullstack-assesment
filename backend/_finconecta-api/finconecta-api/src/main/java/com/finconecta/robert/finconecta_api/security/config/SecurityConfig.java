@@ -3,6 +3,7 @@ package com.finconecta.robert.finconecta_api.security.config;
 import com.finconecta.robert.finconecta_api.security.jwt.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -34,7 +35,11 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/**").authenticated()
+                        .requestMatchers("/api/logs/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/customers").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/customers/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/customers/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/customers/**").hasAnyRole("ADMIN", "USER")
                         .anyRequest().authenticated()
                 );
 
