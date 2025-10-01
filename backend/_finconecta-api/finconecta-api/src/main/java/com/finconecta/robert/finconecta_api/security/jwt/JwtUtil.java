@@ -1,5 +1,6 @@
 package com.finconecta.robert.finconecta_api.security.jwt;
 
+import com.finconecta.robert.finconecta_api.models.User;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -8,7 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
-import java.util.Date;
+import java.util.*;
 
 @Component
 public class JwtUtil {
@@ -24,20 +25,25 @@ public class JwtUtil {
         this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
     }
 
-    public String generateJwtToken(String username) {
+    public String generateJwtToken(String username, Set<String> roles) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("roles", roles);
+
         return Jwts.builder()
-                .subject(username)
-                .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
+                .setClaims(claims)
+                .setSubject(username)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
+
 
     public boolean validateJwtToken(String authToken) {
         try {
             Jwts.parser()
                     .setSigningKey(key)
-                    .build() // El método build() fue añadido en versiones más nuevas
+                    .build()
                     .parseClaimsJws(authToken);
             return true;
         } catch (SignatureException e) {
@@ -59,6 +65,23 @@ public class JwtUtil {
                 .setSigningKey(key)
                 .build()
                 .parseClaimsJws(token)
-                .getBody().getSubject();
+                .getBody()
+                .getSubject();
+    }
+
+    public List<String> getRolesFromJwtToken(String token) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        Object rolesObject = claims.get("roles");
+        if (rolesObject instanceof List<?> rolesList) {
+            return rolesList.stream()
+                    .map(Object::toString)
+                    .toList();
+        }
+        return List.of();
     }
 }
