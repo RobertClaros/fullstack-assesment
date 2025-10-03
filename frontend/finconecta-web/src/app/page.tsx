@@ -7,7 +7,7 @@ export default function Home() {
       </p>
 
       <div className="flex gap-4">
-        <a href="/login" className="btn btn-primary btn-lg">
+        <a href="/auth/signin" className="btn btn-primary btn-lg">
           Log In
         </a>
       </div>
