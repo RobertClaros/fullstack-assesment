@@ -6,10 +6,12 @@ import { Customer } from "../customers/hook/useCustomer";
 interface CustomerFormProps {
   customerToEdit: Customer | null;
   onSave: (customerData: Customer) => Promise<void>;
+  onDelete: (id: string) => Promise<void>;
   isSubmitting: boolean;
 }
 
-const initialFormState = {
+const initialCustomerState: Customer = {
+  id: "",
   firstName: "",
   lastName: "",
   email: "",
@@ -19,155 +21,151 @@ const initialFormState = {
 export function CustomerForm({
   customerToEdit,
   onSave,
+  onDelete,
   isSubmitting,
 }: CustomerFormProps) {
-  const [formData, setFormData] = useState(initialFormState);
-  const [validationError, setValidationError] = useState("");
+  const [formData, setFormData] = useState<Customer>(initialCustomerState);
 
   useEffect(() => {
     if (customerToEdit) {
-      setFormData({
-        firstName: customerToEdit.firstName,
-        lastName: customerToEdit.lastName,
-        email: customerToEdit.email,
-        phone: customerToEdit.phone,
-      });
+      setFormData(customerToEdit);
     } else {
-      setFormData(initialFormState);
+      setFormData(initialCustomerState);
     }
-    setValidationError("");
   }, [customerToEdit]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
-  const validate = () => {
-    if (
-      !formData.firstName ||
-      !formData.lastName ||
-      !formData.email ||
-      !formData.phone
-    ) {
-      setValidationError("All fields are required.");
-      return false;
-    }
-    setValidationError("");
-    return true;
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validate()) return;
-    const customerData: Customer = {
-      id: customerToEdit?.id || "",
-      ...formData,
-    } as Customer;
-
-    await onSave(customerData);
+    onSave(formData);
   };
+
+  const handleDeletion = () => {
+    if (customerToEdit?.id) {
+      onDelete(customerToEdit.id);
+    }
+  };
+
+  const isEditing = !!customerToEdit?.id;
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 p-4">
-      {validationError && (
-        <p className="text-red-500 text-sm italic">{validationError}</p>
-      )}
-
+    <form onSubmit={handleSubmit} className="space-y-4">
       <div>
         <label
           htmlFor="firstName"
-          className="block text-sm font-medium text-gray-700"
+          className="block text-sm font-medium text-gray-700 dark:text-gray-100"
         >
           First Name:
         </label>
         <input
           type="text"
-          name="firstName"
           id="firstName"
+          name="firstName"
           value={formData.firstName}
           onChange={handleChange}
-          className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-          disabled={isSubmitting}
           required
+          className="mt-1 block w-full input input-bordered dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-cyan-500 focus:border-cyan-500 rounded-md shadow-sm"
+          disabled={isSubmitting}
         />
       </div>
 
       <div>
         <label
           htmlFor="lastName"
-          className="block text-sm font-medium text-gray-700"
+          className="block text-sm font-medium text-gray-700 dark:text-gray-100"
         >
           Last Name:
         </label>
         <input
           type="text"
-          name="lastName"
           id="lastName"
+          name="lastName"
           value={formData.lastName}
           onChange={handleChange}
-          className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-          disabled={isSubmitting}
           required
+          className="mt-1 block w-full input input-bordered dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-cyan-500 focus:border-cyan-500 rounded-md shadow-sm"
+          disabled={isSubmitting}
         />
       </div>
 
       <div>
         <label
           htmlFor="email"
-          className="block text-sm font-medium text-gray-700"
+          className="block text-sm font-medium text-gray-700 dark:text-gray-100"
         >
           Email:
         </label>
         <input
           type="email"
-          name="email"
           id="email"
+          name="email"
           value={formData.email}
           onChange={handleChange}
-          className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-          disabled={isSubmitting}
           required
+          className="mt-1 block w-full input input-bordered dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-cyan-500 focus:border-cyan-500 rounded-md shadow-sm"
+          disabled={isSubmitting}
         />
       </div>
 
       <div>
         <label
           htmlFor="phone"
-          className="block text-sm font-medium text-gray-700"
+          className="block text-sm font-medium text-gray-700 dark:text-gray-100"
         >
           Phone:
         </label>
         <input
           type="tel"
-          name="phone"
           id="phone"
+          name="phone"
           value={formData.phone}
           onChange={handleChange}
-          className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-          disabled={isSubmitting}
           required
+          className="mt-1 block w-full input input-bordered dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-cyan-500 focus:border-cyan-500 rounded-md shadow-sm"
+          disabled={isSubmitting}
         />
       </div>
 
-      <button
-        type="submit"
-        disabled={isSubmitting}
-        className={`w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white 
-          ${
-            isSubmitting
-              ? "bg-gray-400 cursor-not-allowed"
-              : "bg-indigo-600 hover:bg-indigo-700 transition"
-          }`}
-      >
-        {isSubmitting
-          ? "Saving..."
-          : customerToEdit
-          ? "Update Customer"
-          : "Create Customer"}
-      </button>
+      <div className="pt-4 flex flex-col sm:flex-row gap-3">
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className={`w-full py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white 
+            ${
+              isSubmitting
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-gray-800 hover:bg-gray-700 dark:bg-cyan-600 dark:hover:bg-cyan-700 transition"
+            }`}
+        >
+          {isSubmitting
+            ? "Submitting..."
+            : isEditing
+            ? "Save Changes"
+            : "Create Customer"}
+        </button>
+        {isEditing && (
+          <button
+            type="button"
+            onClick={handleDeletion}
+            disabled={isSubmitting}
+            className={`w-full sm:w-auto py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium 
+              ${
+                isSubmitting
+                  ? "bg-gray-400 cursor-not-allowed text-gray-600"
+                  : "bg-red-700 hover:bg-red-800 text-white transition"
+              }`}
+          >
+            Delete Customer
+          </button>
+        )}
+      </div>
     </form>
   );
 }

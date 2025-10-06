@@ -21,6 +21,8 @@ export default function CustomerDashboard() {
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
+
+  // Handlers UI
   const handleOpenModal = () => {
     setSelectedCustomer(null);
     setIsModalOpen(true);
@@ -31,20 +33,23 @@ export default function CustomerDashboard() {
     setSelectedCustomer(null);
   };
 
-  const handleEditCustomer = (customer: Customer) => {
+  const handleViewOrEditCustomer = (customer: Customer) => {
     setSelectedCustomer(customer);
     setIsModalOpen(true);
   };
 
   const handleDeleteCustomer = async (id: string) => {
     if (
-      !window.confirm("¿Estás seguro de que quieres eliminar este cliente?")
+      !window.confirm(
+        "¿Estás seguro de que quieres eliminar este cliente? Esta acción es irreversible."
+      )
     ) {
       return;
     }
 
     try {
       await deleteCustomer(id);
+      handleCloseModal();
       console.log(`Cliente con ID ${id} eliminado exitosamente.`);
     } catch (e) {
       console.error("Fallo al eliminar el cliente:", e);
@@ -68,7 +73,11 @@ export default function CustomerDashboard() {
   };
 
   if (loading)
-    return <div className="text-center p-8">Cargando clientes...</div>;
+    return (
+      <div className="text-center p-8 text-gray-700 dark:text-gray-300">
+        Cargando clientes...
+      </div>
+    );
   if (error)
     return (
       <div className="text-center p-8 text-red-500 font-medium">
@@ -79,11 +88,12 @@ export default function CustomerDashboard() {
   return (
     <div className="container mx-auto p-4 md:p-8">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-800">
+        <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
           Customers Management
         </h1>
+        {/* Color de botón empresarial: Gris oscuro / Cyan */}
         <button
-          className="btn btn-primary bg-indigo-600 hover:bg-indigo-700 text-white p-2 rounded-lg transition"
+          className="btn btn-primary bg-gray-800 hover:bg-gray-700 dark:bg-cyan-600 dark:hover:bg-cyan-700 text-white p-2 rounded-lg transition"
           onClick={handleOpenModal}
         >
           Add New Customer
@@ -92,18 +102,18 @@ export default function CustomerDashboard() {
 
       <CustomerList
         customers={customers}
-        onEdit={handleEditCustomer}
-        onDelete={handleDeleteCustomer}
+        onViewDetails={handleViewOrEditCustomer}
       />
 
       <Modal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
-        title={selectedCustomer ? "Edit Customer" : "Add New Customer"}
+        title={selectedCustomer ? "Edit Customer Details" : "Add New Customer"}
       >
         <CustomerForm
           customerToEdit={selectedCustomer}
           onSave={handleSaveCustomer}
+          onDelete={handleDeleteCustomer}
           isSubmitting={isFormSubmitting || isMutating}
         />
       </Modal>
