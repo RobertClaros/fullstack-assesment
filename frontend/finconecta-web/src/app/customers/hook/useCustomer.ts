@@ -3,6 +3,8 @@
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
 export interface Customer {
   id: number;
   firstName: string;
@@ -18,14 +20,16 @@ export function useCustomers() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (status !== "authenticated") {
+    if (status !== "authenticated" || !API_BASE_URL) {
       setLoading(false);
       return;
     }
 
     const fetchCustomers = async () => {
       try {
-        const res = await fetch("http://localhost:8080/api/customers", {
+        const fullUrl = `${API_BASE_URL}/customers`;
+
+        const res = await fetch(fullUrl, {
           headers: {
             Authorization: `Bearer ${session?.accessToken}`,
           },
@@ -36,7 +40,11 @@ export function useCustomers() {
         const data: Customer[] = await res.json();
         setCustomers(data);
       } catch (err: any) {
-        setError(err.message || "Error fetching customers");
+        const errorMessage = API_BASE_URL
+          ? err.message || "Error fetching customers"
+          : "API_BASE_URL not configured. Check your .env.local file.";
+
+        setError(errorMessage);
       } finally {
         setLoading(false);
       }
