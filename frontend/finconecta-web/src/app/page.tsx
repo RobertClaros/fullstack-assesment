@@ -1,4 +1,4 @@
-import { ThemeSwitcher } from "./components/ThemeSwitcher";
+import { ThemeSwitcher } from "./(protected)/components/ThemeSwitcher";
 
 export default function Home() {
   return (

@@ -1,4 +1,4 @@
-import CustomerDashboard from "@/app/components/CustomerDashboard";
+import CustomerDashboard from "@/app/(protected)/components/CustomerDashboard";
 
 export default function CustomersPage() {
   return (

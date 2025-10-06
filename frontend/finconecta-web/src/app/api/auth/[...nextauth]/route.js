@@ -1,5 +1,6 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { jwtDecode } from "jwt-decode";
 
 const handler = NextAuth({
   providers: [
@@ -21,29 +22,35 @@ const handler = NextAuth({
         const user = await res.json();
 
         if (res.ok && user?.token) {
+          const decoded = jwtDecode(user.token);
+
           return {
             id: user.username,
             name: user.username,
             accessToken: user.token,
+            roles: decoded.roles || [],
           };
         }
+
         return null;
       },
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
-  session: {
-    strategy: "jwt",
-  },
+  session: { strategy: "jwt" },
   callbacks: {
     async jwt({ token, user }) {
-      if (user) token.accessToken = user.accessToken;
+      if (user) {
+        token.accessToken = user.accessToken;
+        token.roles = user.roles || [];
+      }
       return token;
     },
     async session({ session, token }) {
       session.user = {
         id: token.sub,
         name: token.name,
+        roles: token.roles || [],
       };
       session.accessToken = token.accessToken;
       return session;
