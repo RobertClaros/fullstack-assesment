@@ -10,31 +10,24 @@ const handler = NextAuth({
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        try {
-          const res = await fetch(`${process.env.BACKEND_URL}/api/auth/login`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              username: credentials?.username,
-              password: credentials?.password,
-            }),
-          });
+        const res = await fetch(`${process.env.BACKEND_URL}/api/auth/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            username: credentials?.username,
+            password: credentials?.password,
+          }),
+        });
+        const user = await res.json();
 
-          const user = await res.json();
-
-          if (res.ok && user?.token) {
-            return {
-              id: user.username,
-              name: user.username,
-              accessToken: user.token,
-            };
-          }
-
-          return null;
-        } catch (err) {
-          console.error("Login error:", err);
-          return null;
+        if (res.ok && user?.token) {
+          return {
+            id: user.username,
+            name: user.username,
+            accessToken: user.token,
+          };
         }
+        return null;
       },
     }),
   ],
@@ -44,15 +37,13 @@ const handler = NextAuth({
   },
   callbacks: {
     async jwt({ token, user }) {
-      if (user) {
-        token.accessToken = user.accessToken;
-      }
+      if (user) token.accessToken = user.accessToken;
       return token;
     },
     async session({ session, token }) {
       session.user = {
+        id: token.sub,
         name: token.name,
-        id: token.id,
       };
       session.accessToken = token.accessToken;
       return session;
