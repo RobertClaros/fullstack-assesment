@@ -12,7 +12,7 @@ export default function Sidebar() {
   const menuItems = [
     { name: "Dashboard", icon: Home, href: "/dashboard" },
     { name: "Customers", icon: Users, href: "/customers" },
-    { name: "Account", icon: UserCog, href: "/account" },
+    { name: "Account", icon: UserCog, href: "/profile" },
     { name: "Support", icon: HelpCircle, href: "/support" },
   ];
 
