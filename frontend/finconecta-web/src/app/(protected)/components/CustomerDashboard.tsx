@@ -6,9 +6,11 @@ import CustomerList from "./CustomerList";
 import { CustomerForm } from "./CustomerForm";
 import { Modal } from "./Modal";
 import { useSession } from "next-auth/react";
+import { useTheme } from "next-themes";
 
 export default function CustomerDashboard() {
   const { data: session } = useSession();
+  const { resolvedTheme } = useTheme();
   const isAdmin = session?.user?.roles?.includes("ROLE_ADMIN");
 
   const {
@@ -25,6 +27,14 @@ export default function CustomerDashboard() {
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
+
+  if (!resolvedTheme) {
+    return (
+      <div className="text-center p-8 text-gray-700 dark:text-gray-300">
+        Loading theme...
+      </div>
+    );
+  }
 
   const handleOpenModal = () => {
     setSelectedCustomer(null);
@@ -53,7 +63,6 @@ export default function CustomerDashboard() {
     try {
       await deleteCustomer(id);
       handleCloseModal();
-      console.log(`Cliente con ID ${id} eliminado exitosamente.`);
     } catch (e) {
       console.error("Fallo al eliminar el cliente:", e);
       alert(
@@ -69,7 +78,9 @@ export default function CustomerDashboard() {
       handleCloseModal();
     } catch (e) {
       console.error("Fallo al guardar el cliente:", e);
-      alert(`Error al guardar el cliente.`);
+      alert(
+        "Error al guardar el cliente. Revisa la consola para más detalles."
+      );
     } finally {
       setIsFormSubmitting(false);
     }

@@ -14,16 +14,16 @@ export default function CustomerList({
 }: CustomerListProps) {
   if (customers.length === 0) {
     return (
-      <div className="text-center p-8 bg-white dark:bg-gray-800 shadow rounded-lg mt-4">
+      <div className="text-center p-8 bg-base-100 dark:bg-base-200 shadow rounded-lg mt-4">
         <p className="text-gray-500 dark:text-gray-400">No customers found.</p>
       </div>
     );
   }
 
   return (
-    <div className="overflow-x-auto bg-white dark:bg-gray-900 shadow-xl rounded-lg mt-4">
+    <div className="overflow-x-auto bg-base-100 dark:bg-base-200 shadow-xl rounded-lg mt-4">
       <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-        <thead className="bg-gray-50 dark:bg-gray-800">
+        <thead className="bg-base-200 dark:bg-base-300">
           <tr>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
               Name
@@ -36,14 +36,14 @@ export default function CustomerList({
             </th>
           </tr>
         </thead>
-        <tbody className="bg-white divide-y divide-gray-200 dark:bg-gray-900 dark:divide-gray-700">
+        <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
           {customers.map((customer) => (
             <tr
               key={customer.id}
-              className="hover:bg-gray-100 dark:hover:bg-gray-800/50 transition duration-150 cursor-pointer"
+              className="hover:bg-base-200 dark:hover:bg-base-300 transition duration-150 cursor-pointer"
               onClick={() => onViewDetails(customer)}
             >
-              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-base-content dark:text-base-content">
                 {customer.firstName} {customer.lastName}
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">

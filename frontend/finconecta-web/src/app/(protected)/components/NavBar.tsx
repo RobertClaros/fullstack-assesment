@@ -16,10 +16,8 @@ export default function Navbar() {
   const toggleTheme = () => setTheme(theme === "dark" ? "light" : "dark");
 
   return (
-    <nav className="flex items-center justify-between bg-gray-100 dark:bg-gray-800 border-b border-gray-300 dark:border-gray-700 px-6 py-3 shadow-sm">
-      <div className="text-lg font-semibold text-gray-800 dark:text-gray-100">
-        Finconecta
-      </div>
+    <nav className="flex items-center justify-between bg-base-100 border-b border-base-300 px-6 py-3 shadow-sm">
+      <div className="text-lg font-semibold text-base-content">Finconecta</div>
 
       <div className="flex items-center gap-4">
         <div className="dropdown dropdown-end">
@@ -28,7 +26,7 @@ export default function Navbar() {
             role="button"
             className="avatar cursor-pointer flex items-center"
           >
-            <div className="w-10 h-10 rounded-full overflow-hidden border border-gray-300 dark:border-gray-700">
+            <div className="w-10 h-10 rounded-full overflow-hidden border border-base-300">
               <Image
                 src="/avatardefault_92824.svg"
                 alt="User Avatar"
@@ -41,9 +39,9 @@ export default function Navbar() {
 
           <ul
             tabIndex={0}
-            className="menu dropdown-content bg-base-100 rounded-box shadow-md mt-3 w-56 z-[1] border border-gray-200 dark:border-gray-700"
+            className="menu dropdown-content bg-base-100 rounded-box shadow-md mt-3 w-56 z-[1] border border-base-300"
           >
-            <li className="px-4 py-2 text-sm text-gray-700 dark:text-gray-200 border-b border-gray-200 dark:border-gray-700">
+            <li className="px-4 py-2 text-sm text-base-content border-b border-base-300">
               <div className="flex flex-col">
                 <span className="font-semibold">{username}</span>
                 <span className="text-xs text-gray-500">{roleLabel}</span>
@@ -53,7 +51,7 @@ export default function Navbar() {
             <li>
               <button
                 onClick={toggleTheme}
-                className="flex items-center gap-2 text-gray-700 hover:text-gray-900 dark:text-gray-200 dark:hover:text-white"
+                className="flex items-center gap-2 text-base-content hover:text-primary"
               >
                 {theme === "dark" ? (
                   <>
@@ -70,7 +68,7 @@ export default function Navbar() {
             <li>
               <button
                 onClick={() => signOut({ callbackUrl: "/auth/signin" })}
-                className="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+                className="text-error hover:text-error-focus"
               >
                 Sign out
               </button>

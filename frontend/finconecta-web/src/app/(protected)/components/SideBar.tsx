@@ -24,13 +24,13 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="w-64 bg-gray-50 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 flex flex-col">
-      <div className="p-4 border-b border-gray-200 dark:border-gray-800">
-        <div className="flex items-center bg-gray-100 dark:bg-gray-800 rounded-lg px-3 py-2">
+    <aside className="w-64 bg-base-100 border-r border-base-300 flex flex-col">
+      <div className="p-4 border-b border-base-300">
+        <div className="flex items-center bg-base-200 rounded-lg px-3 py-2">
           <input
             type="text"
             placeholder="Search..."
-            className="bg-transparent w-full outline-none text-sm text-gray-800 dark:text-gray-200"
+            className="bg-transparent w-full outline-none text-sm text-base-content"
           />
         </div>
       </div>
@@ -44,8 +44,8 @@ export default function Sidebar() {
                 href={href}
                 className={`flex items-center gap-3 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                   active
-                    ? "bg-cyan-600 text-white"
-                    : "text-gray-700 hover:bg-gray-200 dark:text-gray-200 dark:hover:bg-gray-800"
+                    ? "bg-primary text-primary-content"
+                    : "text-base-content hover:bg-base-200"
                 }`}
               >
                 <Icon className="w-5 h-5" />

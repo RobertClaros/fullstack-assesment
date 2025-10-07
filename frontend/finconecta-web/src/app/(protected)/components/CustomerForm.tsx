@@ -27,7 +27,7 @@ export function CustomerForm({
 }: CustomerFormProps) {
   const [formData, setFormData] = useState<Customer>(initialCustomerState);
   const { data: session } = useSession();
-  const isAdmin = session?.user?.roles?.includes("ROLE_ADMIN"); // ✅
+  const isAdmin = session?.user?.roles?.includes("ROLE_ADMIN");
 
   useEffect(() => {
     if (customerToEdit) {
@@ -65,7 +65,7 @@ export function CustomerForm({
         <div key={field}>
           <label
             htmlFor={field}
-            className="block text-sm font-medium text-gray-700 dark:text-gray-100 capitalize"
+            className="block text-sm font-medium text-base-content dark:text-base-content capitalize"
           >
             {field.replace(/([A-Z])/g, " $1").trim()}:
           </label>
@@ -77,8 +77,8 @@ export function CustomerForm({
             onChange={handleChange}
             required
             disabled={isSubmitting || !isAdmin}
-            className={`mt-1 block w-full input input-bordered dark:bg-gray-700 dark:text-white dark:border-gray-600 rounded-md shadow-sm focus:ring-cyan-500 focus:border-cyan-500 ${
-              !isAdmin ? "bg-gray-200 dark:bg-gray-600 cursor-not-allowed" : ""
+            className={`mt-1 block w-full input input-bordered bg-base-100 dark:bg-base-200 text-base-content dark:text-base-content rounded-md shadow-sm focus:ring-cyan-500 focus:border-cyan-500 ${
+              !isAdmin ? "cursor-not-allowed" : ""
             }`}
           />
         </div>
@@ -91,14 +91,13 @@ export function CustomerForm({
           title={
             !isAdmin ? "Solo los administradores pueden guardar cambios" : ""
           }
-          className={`w-full py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white 
-            ${
-              !isAdmin
-                ? "bg-gray-400 cursor-not-allowed"
-                : isSubmitting
-                ? "bg-gray-400 cursor-wait"
-                : "bg-gray-800 hover:bg-gray-700 dark:bg-cyan-600 dark:hover:bg-cyan-700 transition"
-            }`}
+          className={`w-full py-2 px-4 rounded-lg text-white ${
+            !isAdmin
+              ? "bg-gray-400 cursor-not-allowed"
+              : isSubmitting
+              ? "bg-gray-400 cursor-wait"
+              : "bg-gray-800 hover:bg-gray-700 dark:bg-cyan-600 dark:hover:bg-cyan-700 transition"
+          }`}
         >
           {isSubmitting
             ? "Submitting..."
@@ -113,14 +112,13 @@ export function CustomerForm({
             onClick={handleDeletion}
             disabled={isSubmitting || !isAdmin}
             title={!isAdmin ? "Solo los administradores pueden eliminar" : ""}
-            className={`w-full sm:w-auto py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium 
-              ${
-                !isAdmin
-                  ? "bg-gray-400 cursor-not-allowed text-gray-600"
-                  : isSubmitting
-                  ? "bg-gray-400 cursor-wait text-gray-600"
-                  : "bg-red-700 hover:bg-red-800 text-white transition"
-              }`}
+            className={`w-full sm:w-auto py-2 px-4 rounded-lg ${
+              !isAdmin
+                ? "bg-gray-400 cursor-not-allowed text-gray-600"
+                : isSubmitting
+                ? "bg-gray-400 cursor-wait text-gray-600"
+                : "bg-red-700 hover:bg-red-800 text-white transition"
+            }`}
           >
             Delete Customer
           </button>

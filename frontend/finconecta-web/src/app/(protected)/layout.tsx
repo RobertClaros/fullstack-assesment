@@ -1,6 +1,6 @@
 "use client";
 
-import { useSession, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import Navbar from "./components/NavBar";
 import Sidebar from "./components/SideBar";
@@ -13,16 +13,13 @@ export default function ProtectedLayout({
 }) {
   const { data: session, status } = useSession();
 
-  // Redirige a /auth/signin si no está autenticado
   useEffect(() => {
-    if (status === "unauthenticated") {
-      redirect("/auth/signin");
-    }
+    if (status === "unauthenticated") redirect("/auth/signin");
   }, [status]);
 
   if (status === "loading") {
     return (
-      <div className="flex justify-center items-center h-screen text-gray-500">
+      <div className="flex justify-center items-center h-screen text-base-content">
         Cargando sesión...
       </div>
     );
